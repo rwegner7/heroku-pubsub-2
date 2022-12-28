@@ -38,6 +38,7 @@ export default class App extends LightningElement {
     handleWsMessage(message) {
         if (message?.type === 'caseEvent') {
             const { caseId, status } = message.data;
+            console.log('ws message data: ' + message.data);
             if (status === 'New') {
                 this.removeCase(caseId);
             } else if (status === 'Escalated') {
