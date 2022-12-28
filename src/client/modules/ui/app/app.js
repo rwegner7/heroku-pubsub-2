@@ -47,7 +47,7 @@ export default class App extends LightningElement {
     }
 
     loadCase(caseId) {
-        const index = this.cases.findIndex((order) => order.Id === caseId);
+        const index = this.cases.findIndex((c) => c.Id === caseId);
         if (index === -1) {
             fetch(`/api/case/${caseId}`)
                 .then((response) => {
@@ -63,7 +63,7 @@ export default class App extends LightningElement {
     }
 
     removeCase(caseId) {
-        const index = this.cases.findIndex((order) => order.Id === caseId);
+        const index = this.cases.findIndex((c) => c.Id === caseId);
         // eslint-disable-next-line @lwc/lwc/no-async-operation
         setTimeout(() => {
             this.cases.splice(index, 1);
