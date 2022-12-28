@@ -72,7 +72,7 @@ export default class App extends LightningElement {
 
     handleStatusChange(event) {
         const { caseId } = event.detail;
-        const index = this.cases.findIndex((order) => order.Id === caseId);
+        const index = this.cases.findIndex((c) => c.Id === caseId);
         if (index !== -1) {
             const eventData = {
                 type: 'manufacturingEvent',
