@@ -61,11 +61,11 @@ async function start() {
 
     // Handle incoming WS events
     wss.addMessageListener(async (message) => {
-        const { orderId, status } = message.data;
+        const { caseId, status } = message.data;
         const eventData = {
             CreatedDate: Date.now(),
             CreatedById: sfClient.client.userInfo.id,
-            CaseId__c: { string: orderId },
+            CaseId__c: { string: caseId },
             Status__c: { string: status }
         };
         await pubSub.publish(

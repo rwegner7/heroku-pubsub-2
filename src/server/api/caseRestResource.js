@@ -4,7 +4,7 @@ module.exports = class CaseRestResource {
     }
 
     getCases(request, response) {
-        const soql = `SELECT Id, Name, Account.Name, Status FROM Case WHERE Status='New'`;
+        const soql = `SELECT Id, CaseNumber, Account.Name, Status FROM Case WHERE Status='New'`;
         this.sfdc.query(soql, (err, result) => {
             if (err) {
                 console.error(err);
@@ -17,7 +17,7 @@ module.exports = class CaseRestResource {
 
     getCase(request, response) {
         const { caseId } = request.params;
-        const soql = `SELECT Id, Name, Account.Name, Status FROM Case WHERE Id='${caseId.replace(
+        const soql = `SELECT Id, CaseNumber, Account.Name, Status FROM Case WHERE Id='${caseId.replace(
             "'",
             ''
         )}'`;
