@@ -27,9 +27,16 @@ module.exports = class SalesforceClient {
                 privateKey: privateKey
             });
 
+            const responseId = loginRes.id;
+            const organizationId = responseId.substring(
+                responseId.indexOf('id') + 3,
+                responseId.lastIndexOf('/')
+            );
+
             console.log(
                 'Jwt connected to Salesforce org: ' + loginRes.instance_url
             );
+            console.log('Tenant Id: ' + organizationId);
 
             conn.initialize({
                 instanceUrl: loginRes.instance_url,
@@ -37,6 +44,7 @@ module.exports = class SalesforceClient {
             });
 
             this.client = conn;
+            this.client.organizationId = organizationId;
         } catch (err) {
             throw new Error(`Jwt failed to connect to Salesforce: ${err}`);
         }

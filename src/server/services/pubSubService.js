@@ -26,7 +26,7 @@ module.exports = class PubSubService {
             const meta = new grpc.Metadata();
             meta.add('accesstoken', salesforceClient.accessToken);
             meta.add('instanceurl', salesforceClient.instanceUrl);
-            meta.add('tenantid', salesforceClient.userInfo.organizationId);
+            meta.add('tenantid', salesforceClient.organizationId);
             callback(null, meta);
         };
         const callCreds =
