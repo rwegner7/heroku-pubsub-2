@@ -3,19 +3,19 @@
 
     <section class="section">
         <div class="container">
-            <h1 class="title">Orders</h1>
+            <h1 class="title">Cases</h1>
 
-            <template if:false={hasOrders}>
+            <template if:false={hasCases}>
                 <img class="illustration" src="assets/illustration.svg" />
             </template>
-            <template if:true={hasOrders}>
-                <template for:each={orders} for:item="order">
-                    <ui-order-card
-                        key={order.Id}
-                        order-id={order.Id}
-                        order={order}
+            <template if:true={hasCases}>
+                <template for:each={cases} for:item="case">
+                    <ui-case-card
+                        key={case.Id}
+                        case-id={case.Id}
+                        case={case}
                         onstatuschange={handleStatusChange}
-                    ></ui-order-card>
+                    ></ui-case-card>
                 </template>
             </template>
         </div>

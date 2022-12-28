@@ -2,11 +2,11 @@ const Configuration = require('./utils/configuration.js'),
     WebSocketService = require('./services/webSocketService.js'),
     SalesforceClient = require('./services/salesforceClient.js'),
     PubSubService = require('./services/pubSubService.js'),
-    OrderRestResource = require('./api/orderRestResource.js'),
+    CaseRestResource = require('./api/caseRestResource.js'),
     LWR = require('lwr');
 
-const ORDER_CDC_TOPIC = '/event/Carbon_Comparison__e';
-const MANUFACTURING_PE_TOPIC = '/event/Manufacturing_Event__e';
+const CASE_CDC_TOPIC = '/data/CaseChangeEvent';
+const CASE_RESPONSE_PE_TOPIC = '/event/Case_Response__e';
 
 async function start() {
     Configuration.checkConfig();
@@ -33,30 +33,30 @@ async function start() {
         Configuration.getPubSubEndpoint(),
         sfClient.client
     );
-    const [orderCdcSchema, manufacturingPeSchema] = await Promise.all([
-        pubSub.getEventSchema(ORDER_CDC_TOPIC),
-        pubSub.getEventSchema(MANUFACTURING_PE_TOPIC)
+    const [caseCdcSchema, responsePeSchema] = await Promise.all([
+        pubSub.getEventSchema(CASE_CDC_TOPIC),
+        pubSub.getEventSchema(CASE_RESPONSE_PE_TOPIC)
     ]);
 
-    // Subscribe to Change Data Capture events on Reseller Order records
-    pubSub.subscribe(ORDER_CDC_TOPIC, orderCdcSchema, 10, (cdcEvent) => {
-        //const modelYear = cdcEvent.payload.Model_Year__c?.string;
+    // Subscribe to Change Data Capture events on case records
+    pubSub.subscribe(CASE_CDC_TOPIC, caseCdcSchema, 10, (cdcEvent) => {
+        const status = cdcEvent.payload.Status?.string;
         console.log('received <<< ' + JSON.stringify(cdcEvent));
-        //const header = cdcEvent.payload.ChangeEventHeader;
-        // Filter events related to order status updates
-        /*if (header.changeType === 'UPDATE' && status) {
-            header.recordIds.forEach((orderId) => {
+        const header = cdcEvent.payload.ChangeEventHeader;
+        // Filter events related to case status updates
+        if (status) {
+            header.recordIds.forEach((caseId) => {
                 // Notify client via WebSocket
                 const message = {
-                    type: 'manufacturingEvent',
+                    type: 'caseEvent',
                     data: {
-                        orderId,
+                        caseId,
                         status
                     }
                 };
                 wss.broadcast(JSON.stringify(message));
             });
-        }*/
+        }
     });
 
     // Handle incoming WS events
@@ -65,27 +65,24 @@ async function start() {
         const eventData = {
             CreatedDate: Date.now(),
             CreatedById: sfClient.client.userInfo.id,
-            Order_Id__c: { string: orderId },
+            CaseId__c: { string: orderId },
             Status__c: { string: status }
         };
         await pubSub.publish(
-            MANUFACTURING_PE_TOPIC,
-            manufacturingPeSchema,
+            CASE_RESPONSE_PE_TOPIC,
+            responsePeSchema,
             eventData
         );
-        console.log('Published Manufacturing_Event__e', eventData);
+        console.log('Published Case_Response__e', eventData);
     });
 
     // Setup REST resources
-    const orderRest = new OrderRestResource(sfClient.client);
-    app.get('/api/orders', (request, response) => {
-        orderRest.getOrders(request, response);
+    const caseRest = new CaseRestResource(sfClient.client);
+    app.get('/api/case', (request, response) => {
+        caseRest.getCases(request, response);
     });
-    app.get('/api/orders/:orderId', (request, response) => {
-        orderRest.getOrder(request, response);
-    });
-    app.get('/api/orders/:orderId/items', (request, response) => {
-        orderRest.getOrderItems(request, response);
+    app.get('/api/case/:caseId', (request, response) => {
+        caseRest.getCase(request, response);
     });
 
     // HTTP and WebSocket Listen

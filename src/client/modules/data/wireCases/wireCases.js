@@ -1,6 +1,6 @@
 import { register, ValueChangedEvent } from '@lwc/wire-service';
 
-export default function getOrders(config) {
+export default function getCases(config) {
     return new Promise((resolve, reject) => {
         const observer = {
             next: (data) => resolve(data),
@@ -11,7 +11,7 @@ export default function getOrders(config) {
 }
 
 function getData(config, observer) {
-    fetch('/api/orders')
+    fetch('/api/case')
         .then((response) => {
             if (!response.ok) {
                 observer.error('No response from server');
@@ -26,7 +26,7 @@ function getData(config, observer) {
         });
 }
 
-register(getOrders, (eventTarget) => {
+register(getCases, (eventTarget) => {
     let config;
     eventTarget.dispatchEvent(
         new ValueChangedEvent({ data: undefined, error: undefined })

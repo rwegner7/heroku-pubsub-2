@@ -1,19 +1,19 @@
 /* eslint-disable no-console */
 import { LightningElement, track, wire } from 'lwc';
 import { WebSocketClient } from 'utils/webSocketClient';
-import getOrders from 'data/wireOrders';
+import getCases from 'data/wireCases';
 
 const DELETE_ANIMATION_DURATION = 1500;
 
 export default class App extends LightningElement {
-    @track orders = [];
+    @track cases = [];
 
-    @wire(getOrders)
-    getOrders({ error, data }) {
+    @wire(getCases)
+    getCases({ error, data }) {
         if (data) {
-            this.orders = data;
+            this.cases = data;
         } else if (error) {
-            console.error('Failed to retrieve orders', JSON.stringify(error));
+            console.error('Failed to retrieve cases', JSON.stringify(error));
         }
     }
 
@@ -36,20 +36,20 @@ export default class App extends LightningElement {
     }
 
     handleWsMessage(message) {
-        if (message?.type === 'manufacturingEvent') {
-            const { orderId, status } = message.data;
-            if (status === 'Draft') {
-                this.removeOrder(orderId);
-            } else if (status === 'Submitted to Manufacturing') {
-                this.loadOrder(orderId);
+        if (message?.type === 'caseEvent') {
+            const { caseId, status } = message.data;
+            if (status === 'New') {
+                this.removeCase(caseId);
+            } else if (status === 'Escalated') {
+                this.loadCase(caseId);
             }
         }
     }
 
-    loadOrder(orderId) {
-        const index = this.orders.findIndex((order) => order.Id === orderId);
+    loadCase(caseId) {
+        const index = this.cases.findIndex((order) => order.Id === caseId);
         if (index === -1) {
-            fetch(`/api/orders/${orderId}`)
+            fetch(`/api/case/${caseId}`)
                 .then((response) => {
                     if (!response.ok) {
                         throw new Error('No response from server');
@@ -57,22 +57,22 @@ export default class App extends LightningElement {
                     return response.json();
                 })
                 .then((result) => {
-                    this.orders.push(result.data);
+                    this.cases.push(result.data);
                 });
         }
     }
 
-    removeOrder(orderId) {
-        const index = this.orders.findIndex((order) => order.Id === orderId);
+    removeCase(caseId) {
+        const index = this.cases.findIndex((order) => order.Id === caseId);
         // eslint-disable-next-line @lwc/lwc/no-async-operation
         setTimeout(() => {
-            this.orders.splice(index, 1);
+            this.cases.splice(index, 1);
         }, DELETE_ANIMATION_DURATION);
     }
 
     handleStatusChange(event) {
-        const { orderId } = event.detail;
-        const index = this.orders.findIndex((order) => order.Id === orderId);
+        const { caseId } = event.detail;
+        const index = this.cases.findIndex((order) => order.Id === caseId);
         if (index !== -1) {
             const eventData = {
                 type: 'manufacturingEvent',
@@ -80,11 +80,11 @@ export default class App extends LightningElement {
             };
             console.log('WS send: ', eventData);
             this.ws.send(JSON.stringify(eventData));
-            this.removeOrder(orderId);
+            this.removeCase(caseId);
         }
     }
 
-    get hasOrders() {
-        return this.orders.length > 0;
+    get hasCases() {
+        return this.cases.length > 0;
     }
 }
