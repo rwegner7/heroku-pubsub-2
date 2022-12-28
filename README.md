@@ -19,7 +19,7 @@ You can either install the app on
 Click on this button and follow the instructions to deploy the app:
 
 <p align="center">
-  <a href="https://heroku.com/deploy?template=https://github.com/rwegner7/heroku-pubsub-1">
+  <a href="https://heroku.com/deploy?template=https://github.com/rwegner7/heroku-pubsub-2">
     <img src="https://www.herokucdn.com/deploy/button.svg" alt="Deploy">
   </a>
 <p>
