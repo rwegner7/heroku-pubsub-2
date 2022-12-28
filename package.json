@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "private": true,
     "author": "pozil",
-    "bugs": "https://github.com/pozil/lwc-oss-manufacturing/issues",
+    "bugs": "https://github.com/rwegner7/heroku-pubsub-2/issues",
     "dependencies": {
         "@babel/core": "^7.20.5",
         "@grpc/grpc-js": "^1.7.3",
@@ -35,7 +35,7 @@
     "engines": {
         "node": "16.19.0"
     },
-    "homepage": "https://github.com/pozil/lwc-oss-manufacturing",
+    "homepage": "https://github.com/rwegner7/heroku-pubsub-2",
     "license": "CC0-1.0",
     "lint-staged": {
         "**/*.{css,html,js,json,md,yaml,yml}": [
@@ -45,7 +45,7 @@
             "eslint"
         ]
     },
-    "repository": "pozil/lwc-oss-manufacturing",
+    "repository": "rwegner7/heroku-pubsub-2",
     "scripts": {
         "start": "MODE=prod node src/server/server.js",
         "dev": "node src/server/server.js",
