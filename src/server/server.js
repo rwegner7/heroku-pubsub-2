@@ -16,23 +16,15 @@ async function start() {
     const app = lwrServer.getInternalServer();
     const wss = new WebSocketService();
 
-    // Connect to Salesforce
-    // Disclaimer: change this and use JWT auth in production!
+    // Connect to Salesforce with JWT auth
     const sfClient = new SalesforceClient();
-
-    await sfClient.jwtConnect(
-        Configuration.getSfLoginUrl(),
-        Configuration.getSfUsername(),
-        Configuration.getSfApiVersion(),
-        Configuration.getSfClientId(),
-        Configuration.getSfJwtKey()
-    );
 
     await sfClient.connect(
         Configuration.getSfLoginUrl(),
         Configuration.getSfUsername(),
-        Configuration.getSfSecuredPassword(),
-        Configuration.getSfApiVersion()
+        Configuration.getSfApiVersion(),
+        Configuration.getSfClientId(),
+        Configuration.getSfKey()
     );
 
     // Use Pub Sub API to retrieve streaming event schemas

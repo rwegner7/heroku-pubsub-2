@@ -8,26 +8,12 @@ module.exports = class SalesforceClient {
      * Connects to Salesforce using jsForce
      * @param {string} loginUrl
      * @param {string} username
-     * @param {string} password
      * @param {string} version
+     * @param {string} clientId
+     * @param {string} privateKey
      */
-    async connect(loginUrl, username, password, version) {
-        try {
-            const client = new jsforce.Connection({
-                loginUrl,
-                version
-            });
-            const loginResult = await client.login(username, password);
-            console.log(
-                `Connected to Salesforce org ${loginResult.organizationId}: ${client.instanceUrl}`
-            );
-            this.client = client;
-        } catch (err) {
-            throw new Error(`Failed to connect to Salesforce: ${err}`);
-        }
-    }
 
-    async jwtConnect(loginUrl, username, version, clientId, privateKey) {
+    async connect(loginUrl, username, version, clientId, privateKey) {
         try {
             const conn = new jsforce.Connection({
                 loginUrl,
@@ -41,14 +27,18 @@ module.exports = class SalesforceClient {
                 privateKey: privateKey
             });
 
-            console.log(JSON.stringify(loginRes));
+            console.log(
+                'Jwt connected to Salesforce org: ' + loginRes.instance_url
+            );
 
             conn.initialize({
                 instanceUrl: loginRes.instance_url,
                 accessToken: loginRes.access_token
             });
+
+            this.client = conn;
         } catch (err) {
-            throw new Error(`Failed to connect with jwt to Salesforce: ${err}`);
+            throw new Error(`Jwt failed to connect to Salesforce: ${err}`);
         }
     }
 };

@@ -25,18 +25,8 @@
             "value": "",
             "required": true
         },
-        "SALESFORCE_JWT_KEY": {
-            "description": "Salesforce jwt key",
-            "value": "",
-            "required": true
-        },
-        "SALESFORCE_PASSWORD": {
-            "description": "Salesforce password",
-            "value": "",
-            "required": true
-        },
-        "SALESFORCE_TOKEN": {
-            "description": "Salesforce security token",
+        "SALESFORCE_KEY": {
+            "description": "Salesforce certificate key",
             "value": "",
             "required": true
         },
