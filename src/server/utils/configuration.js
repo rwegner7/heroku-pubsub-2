@@ -7,6 +7,8 @@ module.exports = class Configuration {
             'SALESFORCE_LOGIN_URL',
             'SALESFORCE_API_VERSION',
             'SALESFORCE_USERNAME',
+            'SALESFORCE_PASSWORD',
+            'SALESFORCE_TOKEN',
             'SALESFORCE_CLIENTID',
             'SALESFORCE_JWT_KEY',
             'PUB_SUB_ENDPOINT',
@@ -37,6 +39,10 @@ module.exports = class Configuration {
 
     static getSfJwtKey() {
         return process.env.SALESFORCE_JWT_KEY;
+    }
+
+    static getSfSecuredPassword() {
+        return process.env.SALESFORCE_PASSWORD + process.env.SALESFORCE_TOKEN;
     }
 
     static getPubSubEndpoint() {

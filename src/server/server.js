@@ -19,11 +19,20 @@ async function start() {
     // Connect to Salesforce
     // Disclaimer: change this and use JWT auth in production!
     const sfClient = new SalesforceClient();
+
+    await sfClient.jwtConnect(
+        Configuration.getSfLoginUrl(),
+        Configuration.getSfUsername(),
+        Configuration.getSfApiVersion(),
+        Configuration.getSfClientId(),
+        Configuration.getSfJwtKey()
+    );
+
     await sfClient.connect(
         Configuration.getSfLoginUrl(),
         Configuration.getSfUsername(),
-        Configuration.getSfClientId(),
-        Configuration.getSfJwtKey()
+        Configuration.getSfSecuredPassword(),
+        Configuration.getSfApiVersion()
     );
 
     // Use Pub Sub API to retrieve streaming event schemas

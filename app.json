@@ -21,12 +21,22 @@
             "required": true
         },
         "SALESFORCE_CLIENTID": {
-            "description": "Salesforce password",
+            "description": "Salesforce connected app client id",
             "value": "",
             "required": true
         },
         "SALESFORCE_JWT_KEY": {
-            "description": "Salesforce jwt public key",
+            "description": "Salesforce jwt key",
+            "value": "",
+            "required": true
+        },
+        "SALESFORCE_PASSWORD": {
+            "description": "Salesforce password",
+            "value": "",
+            "required": true
+        },
+        "SALESFORCE_TOKEN": {
+            "description": "Salesforce security token",
             "value": "",
             "required": true
         },
